@@ -1,69 +1,78 @@
 # Chess Board
 
 Mecatronic chessboard for playing chess via voice commands.
-This branch is divided in two, the Board Client, running in a Raspberry PI,
-and the Mecatronic System, running in a microcontroller.
 
-We split the Board Client and Mecatronic system, for decoupling the overall project,
+The board listens to the user, uses an STT model and parse the commands, communicate with
+the Voice-Chess API, then sends the corresponding movement coordinates via Serial UART
+to the Hardware Controller, which programs an XY CNC to move an electromagnet beneath the
+pieces.
+
+# Program Division
+
+This branch is divided into two programs, the Board Client (running in a Raspberry PI),
+and the Hardware Controller (running in a microcontroller).
+
+We split the Board Client and Hardware Controller, for decoupling the overall project,
+and realtime OS (FreeRTOS) for the XY CNC control.
 this allow us to easily mock the hardware on the board, providing a Board Client
-to the API with no mecatronic system required.
+to the API with no hardware required to function.
+Plus the CNC program is more reliable and manteinable in an RTOS and microcontroller
+frameworks like Arduino.
 
-For the microcontroller we chose the Esp32, as it's cheap, small, easy to quickstart
-and provides all the hardware interfaces we require.
 We chose the Raspberry PI for running the Board Client, because we needed to run
 STT and TTS models, and easily communicate to the microcontroller.
 
-We decided that building the mechanic's from zero would be inviable duo to deadlines,
+For the microcontroller we chose the Esp32, as it's cheap, small, easy to quickstart
+and provides all the hardware interfaces we require.
+
+We decided that building the mechanic frame from zero would be inviable duo to deadlines,
 so we modified a personal laser cutter, swapping the laser with the electromagnet
 and removing it's motherboard, so we could focus on the electronic and programming.
 
-If you intend to build the mechanic system, we included a materials section which
+If you intend to build the mechanic frame, we included a materials section which
 lists the general pieces you need to make it work, be aware you will need more than
 what's listed, as we only specified the general pieces.
 
 ## Board Client
 
-Python program serving as an intermediari between the user, the board and the API.
-Handles user voice commands, via STT and TTS AI models, API requests and fetches,
-and serial communication with the Mecatronic System microcontroller to trigger movements.
+Client to the Voice-Chess API, listening and parsing user commands, and when present,
+sending movement commands via serial to the Hardware Controller.
 
 ### Configuration
 
-TODO
+Configured with an env file in `./client/src/.env`, with this format
+
+```env
+# true or false
+HARDWARE_ENABLED=true
+```
 
 ### Usage
 
-The Board Client can run without the Mecatronic System by passing the `TODO flag` flag,
-when running with the hardware it won't handle commands if hardware is disconnected.
-
 Check the [commands](board/client/commands.md) available for the board client.
 
-The program dependencies are listed in the requirements.txt, it's advised
-to run it in it's owned virtual environment.
-One additional dependency is needed, portaudio which is required by pyaudio,
+Portaudio is required by pyaudio which is used for the audio stream,
 it can be installed in the Raspberry Pi via (or debian based systems):
 
 ```bash
 sudo apt install portaudio19-dev
 ```
 
-Start venv, install python dependencies, and run the client:
+The dependency management is handled by [poetry](https://python-poetry.org/)
 
 ```bash
 cd board/client
 
-virtualenv
-pip install -r requirements.txt
-
-python3 src/main.py
+poetry install --no-dev --user
+poetry run -- python3 src/main.py
 ```
 
-## Mecatronic System
+## Hardware Controller
 
-Cartesian movement system for moving the chess pieces, works by displacing an electromagnet,
+XY CNC controller for the chess-piece movement, works by displacing an electromagnet,
 which on activation, moves the ferromagnetic material attached to the chess pieces.
-Receives movement commands from the Board Client via serial, queues the commands and
-handles the electronic components for executing them.
+Receives movement commands from the Board Client via serial, queues the commands received
+and handles the electronic components for executing them.
 
 ### Materials
 
