@@ -44,7 +44,7 @@ Configured with an env file in `./client/src/.env`, with this format
 
 ```env
 # true or false
-HARDWARE_ENABLED=true
+MOCK_HARDWARE=true
 ```
 
 ### Usage
