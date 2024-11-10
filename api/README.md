@@ -9,22 +9,21 @@ TODO
 
 ## Usage
 
-The API is built using python and FastAPI framework, it's dependencies are listed in the
-requirements.txt, it's advised to run it in it's own virtual environment.
+The API is built using python and FastAPI framework.
+
+The dependency management is handled by [poetry](https://python-poetry.org/)
 
 ```bash
 cd api
 
-virtualenv
-pip install -r requirements.txt
-
-cd src
+poetry install --no-dev --user
 
 # run with interpreter
-python3 main.py
+poetry run -- python3 src/main.py
 
 # or with uvicorn
-uviron main:app
+cd src
+poetry run -- uviron main:app
 ```
 
 after that the API will be running on `http://127.0.0.1:8000`
