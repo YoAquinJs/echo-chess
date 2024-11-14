@@ -5,7 +5,11 @@ endpoints for data retrieval and board config to the web interface.
 
 ## Configuration
 
-TODO
+Configured with an env file in `./src/.env`, with this format
+
+```env
+ECHO_CHESS_DB_URL="sqlite:///path/to/database.db"
+```
 
 ## Usage
 
@@ -30,7 +34,7 @@ after that the API will be running on `http://127.0.0.1:8000`
 
 ## Endpoints
 
-FastAPI provides a documentation page for testing the endpoints manually,
+FastAPI provides a OpenAPI documentation page, and request testing of the endpoints
 it's under `http://127.0.0.1:8000/docs`
 
 TODO list endpoint and intended use cases

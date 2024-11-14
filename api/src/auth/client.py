@@ -1,0 +1,1 @@
+"""handles board clients authentication"""
