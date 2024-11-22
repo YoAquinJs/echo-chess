@@ -1,5 +1,5 @@
 {
-"MODEL_PATH" : "C:/Users/Wendy/Downloads/vosk-model-small-en-us-0.15/vosk-model-small-en-us-0.15",
+"MODEL_PATH" : "ENV:MODEL_PATH",
 "SAMPLE_RATE" : 16000,
 "SERIAL_PORT": "/dev/ttys0",
 "BAUD_RATE": 9600
