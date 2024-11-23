@@ -1,4 +1,4 @@
-"""unit tests the hardware.interface module"""
+"""unit tests for the hardware.interface module"""
 
 from hardware.interface import HARDWARE_COMMANDS, HardwareCommand
 
