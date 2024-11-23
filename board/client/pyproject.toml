@@ -17,9 +17,11 @@ python-dotenv = "^1.0.1"
 pylint = "^3.3.1"
 black = "^24.10.0"
 isort = "^5.13.2"
+mypy = "^1.13.0"
 
 [tool.poetry.group.test.dependencies]
 pytest = "^8.3.3"
+hypothesis = "^6.119.4"
 
 [build-system]
 requires = ["poetry-core"]
