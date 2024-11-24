@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Juegos de {{ user.name }}</title>
+</head>
+<body>
+    <h1>Juegos del Usuario {{ user.name }}</h1>
+    <ul>
+        {% if games %}
+            {% for game in games %}
+            <li> 
+                <a href="/user/{{user.id}}/games/{{ game.id }}/movements">Juego ID: {{ game.id }}</a>, Estado: {{ game.status }} 
+            </li>    
+            {% endfor %}
+        {% else %}
+            <li>No hay juegos registrados</li>
+        {% endif %}
+    </ul>
+    <a href="/user/{{ user.id }}">Regresar</a>
+</body>
+</html>

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Actualizar Token</title>
+</head>
+<body>
+    <h1>Actualizar Token de Usuario</h1>
+
+    <!-- Mostrar mensaje de éxito o error -->
+    {% if message %}
+        <div style="color: green;">
+            <p>{{ message }}</p>
+        </div>
+    {% elif error %}
+        <div style="color: red;">
+            <p>{{ error }}</p>
+        </div>
+    {% endif %}
+
+    <h2>Usuario: {{ user.username }}</h2>
+
+    <!-- Formulario para actualizar el token -->
+    <form action="/user/{{ user.id }}/update_token" method="post">
+        <label for="token">Nuevo Token (dejar vacío para nulo):</label><br>
+        <input type="text" id="token" name="token" value="{{ user.token or '' }}"><br><br>
+        <input type="submit" value="Actualizar Token">
+    </form>
+
+    <br>
+    <a href="/user/{{user.id}}">Volver a la página de usuario</a>
+</body>
+</html>
