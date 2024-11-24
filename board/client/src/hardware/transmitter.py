@@ -1,5 +1,5 @@
 """
-transmits commands to the hardware
+interface for transmitting commands from client to hardware
 """
 
 from __future__ import annotations
@@ -16,6 +16,10 @@ from hardware.interface import (
 
 class HardwareError(Exception):
     """raise upon error, unknown response status or timeout from hardware"""
+
+    def __init__(self, message: str, status: HardwareStatus):
+        self.status = status
+        super().__init__(message or status.value)
 
 
 class HardwareTransmiter(ABC):
@@ -43,34 +47,28 @@ class HardwareTransmiter(ABC):
 
         return cls._instance
 
-    async def fetch_available_commands(self) -> None:
-        """fetch available commands from hardware and cache that"""
+    def fetch_available_commands(self) -> None:
+        """fetch available commands from hardware and cache them"""
 
         self.available_commands.clear()
 
-        try:
-            await self.send_command(AvailableCommand(AvailableCommand))
-            self.available_commands.add(AvailableCommand)
-        except HardwareError:
+        hardware_status = self.send_command(AvailableCommand(AvailableCommand))
+        if hardware_status != HardwareStatus.AVAILABLE:
             return
 
+        self.available_commands.add(AvailableCommand)
         for command in HARDWARE_COMMANDS:
             if command == AvailableCommand:
                 continue
 
-            try:
-                await self.send_command(AvailableCommand(command))
+            hardware_status = self.send_command(AvailableCommand(command))
+            if hardware_status == HardwareStatus.AVAILABLE:
                 self.available_commands.add(command)
-            except HardwareError:
-                return
 
     @abstractmethod
     def setup(self) -> None:
         """setup the transmitter"""
 
     @abstractmethod
-    async def send_command(self, cmd: HardwareCommand) -> HardwareStatus:
-        """
-        sends cmd to hardware
-        raises: HardwareError
-        """
+    def send_command(self, cmd: HardwareCommand) -> HardwareStatus:
+        """sends cmd to hardware and returns status"""

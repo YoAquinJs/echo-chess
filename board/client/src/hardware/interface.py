@@ -113,7 +113,17 @@ HARDWARE_COMMANDS: list[type[HardwareCommand]] = [
 
 
 class HardwareStatus(Enum):
-    """represents status codes the hardware responds with, 1 byte long"""
+    """
+    represents status codes the hardware responds with, 1 byte long
+
+    Possible Status
+    OK: command received with no errors
+    ERROR: command received with errors
+    AVAILABLE: command available (only with AVL cmd)
+    UNAVAILABLE: command unavailable (only with AVL cmd)
+    """
 
     OK = 0
-    ERR = 1
+    ERROR = 1
+    AVAILABLE = 3
+    UNAVAILABLE = 4
