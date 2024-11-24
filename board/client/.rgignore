@@ -3,5 +3,6 @@
 .hypothesis/
 
 __init__.py
+py.typed
 
 poetry.lock

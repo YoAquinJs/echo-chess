@@ -24,6 +24,7 @@ the 4 most significant bits represent the column.
 """
 
 from dataclasses import dataclass
+from typing import Literal
 
 
 @dataclass
@@ -33,10 +34,10 @@ class BoardPosition:
     MAX_ROW = 9
     MAX_COL = 9
 
-    ENDIANNESS = "big"
-
     row: int
     col: int
+
+    ENDIANNESS: Literal["big", "little"] = "big"
 
     def __post_init__(self):
         if self.row < 0 or self.row > BoardPosition.MAX_ROW:

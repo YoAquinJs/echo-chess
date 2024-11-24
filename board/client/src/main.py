@@ -10,7 +10,8 @@ from dotenv import load_dotenv
 def main():
     """program entry point"""
 
-    load_dotenv()
+    if not load_dotenv():
+        raise RuntimeError("no .env configuration file found")
 
 
 if __name__ == "__main__":
