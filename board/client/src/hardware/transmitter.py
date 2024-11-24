@@ -22,24 +22,28 @@ class HardwareError(Exception):
         super().__init__(message or status.value)
 
 
-class HardwareTransmiter(ABC):
+class HardwareTransmitter(ABC):
     """interface for hardware transmission"""
 
-    _instance: HardwareTransmiter | None = None
+    _instance: HardwareTransmitter | None = None
 
     def __init__(self) -> None:
-        if HardwareTransmiter._instance:
+        if HardwareTransmitter._instance is not None:
             raise RuntimeError("multiple transmitters where instantiated")
 
-        HardwareTransmiter._instance = self
+        HardwareTransmitter._instance = self
 
         self.setup()
 
-        self.available_commands: set[type[HardwareCommand]]
         self.fetch_available_commands()
 
     @classmethod
-    def transmitter(cls) -> HardwareTransmiter:
+    def instantiated(cls) -> bool:
+        """whether a transmitter has been instantiated or not"""
+        return cls._instance is not None
+
+    @classmethod
+    def transmitter(cls) -> HardwareTransmitter:
         """transmitter getter"""
 
         if cls._instance is None:
@@ -48,15 +52,14 @@ class HardwareTransmiter(ABC):
         return cls._instance
 
     def fetch_available_commands(self) -> None:
-        """fetch available commands from hardware and cache them"""
+        """fetch available commands from hardware and cache them (excludes AVL)"""
 
-        self.available_commands.clear()
+        self.available_commands: set[type[HardwareCommand]] = set()
 
         hardware_status = self.send_command(AvailableCommand(AvailableCommand))
         if hardware_status != HardwareStatus.AVAILABLE:
             return
 
-        self.available_commands.add(AvailableCommand)
         for command in HARDWARE_COMMANDS:
             if command == AvailableCommand:
                 continue

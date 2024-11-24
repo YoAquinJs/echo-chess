@@ -127,3 +127,8 @@ class HardwareStatus(Enum):
     ERROR = 1
     AVAILABLE = 3
     UNAVAILABLE = 4
+
+
+AVAILABILITY_STATUSES = {HardwareStatus.AVAILABLE, HardwareStatus.UNAVAILABLE}
+STATUSES_WITHOUT_AVAILABILIY = {status.value for status in HardwareStatus}
+STATUSES_WITHOUT_AVAILABILIY.difference(AVAILABILITY_STATUSES)
