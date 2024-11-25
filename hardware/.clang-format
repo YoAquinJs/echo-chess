@@ -1,0 +1,22 @@
+BasedOnStyle: Google
+
+IncludeIsMainRegex: '(_test)?\.(h|hpp)$'
+IncludeIsMainSourceRegex: '(_test)?\.(c|cpp)$'
+SortIncludes: true
+IncludeBlocks: Regroup
+
+IncludeCategories:
+    # Local includes within the same directory
+  - Regex: '^"[^/]+.h"'
+    Priority: 1
+    # System headers
+  - Regex: '^<.*\.h>$'
+    Priority: 2
+    # Any other include
+  - Regex: '.*'
+    Priority: 3
+
+IndentWidth: 4
+UseTab: Never
+
+AllowShortFunctionsOnASingleLine: None
