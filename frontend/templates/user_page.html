@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Usuario {{ user.name }}</title>
+</head>
+<body>
+    <h1>Información del Usuario</h1>
+    <p><strong>Nombre:</strong> {{ user.name }}</p>
+    <p><strong>Token:</strong> {{ user.board_token if user.board_token else "No registrado" }}</p>
+    <br>
+    <a href="/user/{{ user.id }}/update_token">Actualizar token</a>
+    <br>
+    <a href="/user/{{ user.id }}/games">Ver juegos</a>
+    <br><br>
+    <a href="/">Cerrar sesión</a>
+</body>
+</html>
