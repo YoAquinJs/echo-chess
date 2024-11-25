@@ -1,0 +1,13 @@
+*venv
+__pycache__
+
+.mypy_cache
+
+.hypothesis
+.pytest_cache
+
+*.env
+
+*.log
+
+py.typed
