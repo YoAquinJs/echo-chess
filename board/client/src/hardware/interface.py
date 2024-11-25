@@ -125,8 +125,8 @@ class HardwareStatus(Enum):
 
     OK = 0
     ERROR = 1
-    AVAILABLE = 3
-    UNAVAILABLE = 4
+    AVAILABLE = 2
+    UNAVAILABLE = 3
 
 
 AVAILABILITY_STATUSES = {HardwareStatus.AVAILABLE, HardwareStatus.UNAVAILABLE}
