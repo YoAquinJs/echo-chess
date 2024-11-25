@@ -31,7 +31,7 @@ class MockHardwareTransmitter(HardwareTransmitter):
     def __init__(
         self,
         mock_response_mode: MockResponseMode,
-        enabled_cmds: set[type[HardwareCommand]] = None,
+        enabled_cmds: set[type[HardwareCommand]] | None = None,
     ) -> None:
         self.mock_mode = mock_response_mode
         self.enabled_commands = (

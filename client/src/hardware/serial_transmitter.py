@@ -3,6 +3,7 @@ serial communication transmitter
 """
 
 import os
+from typing import Literal
 
 from serial import Serial, SerialException
 
@@ -20,7 +21,7 @@ class SerialTransmitter(HardwareTransmitter):
 
     DEFAULT_TIMEOUT = 0.1  # 100ms
 
-    RESPONSE_ENDIANESS = "big"
+    RESPONSE_ENDIANESS: Literal["big", "little"] = "big"
 
     def setup(self) -> None:
         port = os.environ.get(SerialTransmitter.PORT_ENV, None)
@@ -39,9 +40,9 @@ class SerialTransmitter(HardwareTransmitter):
         try:
             timeout_var = os.environ.get(SerialTransmitter.TIMEOUT_ENV, None)
             if timeout_var is None:
-                timeout_var = SerialTransmitter.DEFAULT_TIMEOUT
-
-            timeout = float(timeout_var)
+                timeout = SerialTransmitter.DEFAULT_TIMEOUT
+            else:
+                timeout = float(timeout_var)
         except ValueError as e:
             raise RuntimeError("invalid serial timeout configured") from e
 
