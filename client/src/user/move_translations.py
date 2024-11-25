@@ -32,6 +32,7 @@ moves_translations = {
     "do you": "d",
     "day": "d",
     "did": "d",
+    "di" : "d",
     "won": "1",
     "is": "e",
     "ate": "8",
@@ -55,3 +56,4 @@ def correct_recognition(text):
         text = re.sub(r"\b" + word + r"\b", replacement, text)
 
     return text
+
