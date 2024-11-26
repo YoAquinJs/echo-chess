@@ -10,12 +10,12 @@ We chose the raspberry pi for running the board client, because we needed to
 run stt and tts models, and easily communicate via serial to the
 microcontroller.
 
-for the microcontroller we chose the esp32, as it's cheap, small, easy to
+for the microcontroller we chose the esp32, as its cheap, small, easy to
 quickstart and provides all the hardware interfaces we require.
 
 We decided that building the mechanic frame from zero would be inviable due to
 deadlines, so we modified a personal laser cutter, swapping the laser with the
-electromagnet and removing it's motherboard, so we could focus on the
+electromagnet and removing its motherboard, so we could focus on the
 electronics and programming.
 
 If you intend to build the mechanic system, we include a materials section
@@ -43,29 +43,24 @@ In parenthesis we specify what specific component we used
     - Display (OLED display 0.96 inc)
 
 The motors we used work with 12V and consume less than 1A, the electromagnet
-works with 5V and consumes 300mA at max,
+works with 5V and consumes 300mA at max.
 
 ### Usage
 
 The program can be loaded to the microcontroller via the arduino-cli. If you
-are not using the ESP32, modify the pinout in the code to match your board's
-pinout, additionally if `./board/new-sketch.sh` does not correctly recognizes
+are not using the ESP32, modify the pinout in the code to match your boards
+pinout, additionally if `./setup-sketch.sh` does not correctly recognizes
 your board, try the [official arduino-cli tutorial](https://arduino.github.io/arduino-cli/1.0/getting-started/).
 
 ```bash
-cd board
-
 # replace esp32 with your corresponding board name
-./new-sketch.sh controller esp32
+./setup-sketch.sh controller esp32
 ```
 
 once the sketch configuration is in place, you can compile, upload to your
-board and listen to serial output with:
+board and monitor the serial output with:
 
 ```bash
-cd controller
-
-arduino-cli compile
-arduino upload
-arduino monitor
+arduino-cli compile --upload controller
+arduino-cli monitor controller
 ```

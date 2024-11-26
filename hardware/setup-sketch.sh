@@ -30,16 +30,22 @@ port=$(echo "$board_info" | awk '{print $1}')
 fqbn=$(echo "$board_info" | awk '{print $(NF-1)}')
 core=$(echo "$board_info" | awk '{print $(NF)}')
 
-if [ -d "$dir" ]; then
+if [ -d "$dir" ] &&  [ -f "$dir/$(basename "$dir").ino"  ]; then
+    echo "reattaching board to existing sketch"
+
     arduino-cli board attach -p "$port" -b "$fqbn" "$dir"
-    exit 0
+else
+    echo "creating new sketch"
+
+    arduino-cli sketch new "$dir"
+
+    arduino-cli core update-index
+
+    arduino-cli core install "$core"
+
+    arduino-cli board attach -p "$port" -b "$fqbn" "$dir"
 fi
 
-echo "creating new sketch"
-arduino-cli sketch new "$dir"
+script_dir="$(dirname "${BASH_SOURCE[0]}")"
 
-arduino-cli core update-index
-
-arduino-cli core install "$core"
-
-arduino-cli board attach -p "$port" -b "$fqbn" "$dir"
+cp "$script_dir/.clang-format" "$dir"
