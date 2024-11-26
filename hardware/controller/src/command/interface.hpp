@@ -1,7 +1,7 @@
-#include "WString.h"
-
 #ifndef CONTROLLER_COMMAND_INTERFACE_H
 #define CONTROLLER_COMMAND_INTERFACE_H
+
+#include "WString.h"
 
 #define COMMAND_ID_SIZE 1
 #define COORD_BIT_SIZE 4
@@ -54,46 +54,6 @@ struct EncodedMovement {
     const EncMov distY : COORD_BIT_SIZE + 1;
 
     EncodedMovement(EncodedPosition origin, EncodedPosition dest);
-};
-
-struct Command {
-    virtual void Execute() = 0;
-    virtual ResponseStatus Parse(String args) = 0;
-
-    // allocates a new command into decoded_command
-    static ResponseStatus DecodeCommand(String raw_input,
-                                        Command** decoded_command);
-};
-
-class AvailableCommand : public Command {
-    CommandCode command;
-
-   public:
-    void Execute();
-    ResponseStatus Parse(String args);
-};
-
-class MovementCommand : public Command {
-    EncodedPosition origin;
-    EncodedPosition dest;
-
-   public:
-    void Execute();
-    ResponseStatus Parse(String args);
-};
-
-class ClearCommand : public Command {
-   public:
-    void Execute();
-    ResponseStatus Parse(String args);
-};
-
-class PrintCommand : public Command {
-    String content;
-
-   public:
-    void Execute();
-    ResponseStatus Parse(String args);
 };
 
 #endif  // CONTROLLER_COMMAND_INTERFACE_H
