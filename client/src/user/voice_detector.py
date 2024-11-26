@@ -6,10 +6,8 @@ import numpy as np
 import pyaudio
 import vosk
 
-from config import setup_logging
-from move_translations import correct_recognition
-
-setup_logging()
+# kep all imports relative to projects root
+from stt_translations import correct_recognition
 
 
 class UnavailableSTT(Exception):

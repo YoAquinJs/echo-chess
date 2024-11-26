@@ -1,11 +1,11 @@
 import asyncio
 import logging
 
-from config import setup_logging
 from tts import speak_message
 from voice_detector import UnavailableSTT, user_cmd_listener
 
-setup_logging()
+# TODO rename every game name to user IO terminology, like input_loop
+# remove prints as they pollute the program output
 
 
 async def game_loop(detector):
@@ -17,9 +17,9 @@ async def game_loop(detector):
             if detected and command_chess in text:
                 print("Chess command detected. Ready for your move.")
                 speak_message("What is your next move?")
-                await asyncio.sleep(0.3)
+                await asyncio.sleep(0.3)  # TODO avoid magic numbers
 
-                # Trigger del comando
+                # Trigger del commando
                 await user_cmd_listener(detector)
 
             else:

@@ -5,13 +5,9 @@ hardware transmitter mock
 import random
 from enum import Enum, auto
 
-from hardware.interface import (
-    HARDWARE_COMMANDS,
-    STATUSES_WITHOUT_AVAILABILIY,
-    AvailableCommand,
-    HardwareCommand,
-    HardwareStatus,
-)
+from hardware.interface import (HARDWARE_COMMANDS,
+                                STATUSES_WITHOUT_AVAILABILIY, AvailableCommand,
+                                HardwareCommand, HardwareStatus)
 from hardware.transmitter import HardwareTransmitter
 
 

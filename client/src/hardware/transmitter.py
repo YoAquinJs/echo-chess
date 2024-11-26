@@ -6,12 +6,8 @@ from __future__ import annotations
 
 from abc import ABC, abstractmethod
 
-from hardware.interface import (
-    HARDWARE_COMMANDS,
-    AvailableCommand,
-    HardwareCommand,
-    HardwareStatus,
-)
+from hardware.interface import (HARDWARE_COMMANDS, AvailableCommand,
+                                HardwareCommand, HardwareStatus)
 
 
 class HardwareError(Exception):
