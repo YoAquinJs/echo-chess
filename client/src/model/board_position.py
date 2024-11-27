@@ -23,8 +23,11 @@ the 4 least significant bits represent the row.
 the 4 most significant bits represent the column.
 """
 
+from __future__ import annotations
+
 from dataclasses import dataclass
-from typing import Literal
+
+from hardware.interface import ENDIANNESS
 
 
 @dataclass
@@ -37,14 +40,42 @@ class BoardPosition:
     row: int
     col: int
 
-    ENDIANNESS: Literal["big", "little"] = "big"
-
     def __post_init__(self):
         if self.row < 0 or self.row > BoardPosition.MAX_ROW:
             raise ValueError("invalid row")
 
         if self.col < 0 or self.col > BoardPosition.MAX_COL:
             raise ValueError("invalid col")
+
+    @staticmethod
+    def from_chess_encoding(position: str) -> BoardPosition:
+        """from chess encoding constructs a BoardPosition"""
+
+        if len(position) != 2:
+            raise ValueError("board position expects 2 characters ")
+
+        row = ord(position[0]) - ord("1") + 1
+        col = ord(position[1]) - ord("a") + 1
+
+        if not (
+            (0 < row < BoardPosition.MAX_ROW) and (0 < col < BoardPosition.MAX_COL)
+        ):
+            raise ValueError("invalid chess encoding")
+
+        return BoardPosition(row=row, col=col)
+
+    def chess_encode(self) -> str:
+        """
+        encodes position into chess formatting string
+        format: <column in lower case letter [a, h]><row in number [1, 8]>
+        example: "e6"
+        """
+
+        invalid_squares = (0, BoardPosition.MAX_COL)
+        if self.row in invalid_squares or self.col in invalid_squares:
+            raise ValueError("chess encoding does not include storage squares")
+
+        return f"{chr(ord('a')+self.col-1)}{chr(ord('0')+self.row)}"
 
     def human_readable(self) -> str:
         """human readable string, where STG means storage"""
@@ -67,11 +98,10 @@ class BoardPosition:
 
         return f"({row}, {col})"
 
-    def encode(self) -> bytes:
+    def hardware_encode(self) -> bytes:
         """encodes position to bytes"""
-        return ((self.row << 4) | self.col).to_bytes(
-            1, BoardPosition.ENDIANNESS, signed=False
-        )
+
+        return ((self.row << 4) | self.col).to_bytes(1, ENDIANNESS, signed=False)
 
     def __bytes__(self):
-        return self.encode()
+        return self.hardware_encode()
