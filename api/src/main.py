@@ -3,13 +3,22 @@ Echo-Chess API
 """
 
 import uvicorn
-from dotenv import load_dotenv
+
+# Añadir el directorio raíz del proyecto al sys.path 
+import sys
+import os
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+#Devolver luego
+#from dotenv import load_dotenv
+
 from fastapi import FastAPI
 
 from database.setup import setup_database
 from routers.setup import register_routers
 
-load_dotenv()
+#Devolver luego
+#load_dotenv()
 
 setup_database()
 

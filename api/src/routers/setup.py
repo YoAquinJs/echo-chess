@@ -2,12 +2,14 @@
 
 from fastapi import APIRouter, FastAPI
 
-import routers
+from routers.root import router as root_router 
+from routers.user import router as user_router 
+from routers.board_client import router as board_client_router
 
-routers: list[APIRouter] = [
-    routers.root.router,
-    routers.user.router,
-    routers.client.router,
+routers: list[APIRouter] = [ 
+    root_router,
+    user_router,
+    board_client_router
 ]
 
 
