@@ -98,7 +98,7 @@ def create_board_game(token: str, opponent_id: int, session: Session = DBSession
 
 #Crea un ChessMovement con parametros dados y conectado con el id del ChessGame especificado
 @router.post("/movement/{game_id}")
-def create_movement(game_id: int, index: int, encoded_movement: int, session: Session = DBSessionDependency):
+def create_movement(game_id: int, index: int, start_move: str, end_move: str, session: Session = DBSessionDependency):
     
     # Verificar si el juego existe
     chess_game = session.get(ChessGame, game_id, )
@@ -109,7 +109,8 @@ def create_movement(game_id: int, index: int, encoded_movement: int, session: Se
     new_movement = ChessMovement(
         game_id= game_id,
         index= index,
-        encoded_movement= encoded_movement,
+        start_move= start_move,
+        end_move= end_move
     )
     session.add(new_movement)
     session.commit()
@@ -120,5 +121,6 @@ def create_movement(game_id: int, index: int, encoded_movement: int, session: Se
         "movement_id": new_movement.id,
         "game_id": game_id,
         "index": new_movement.index,
-        "encoded_movement": new_movement.encoded_movement,
+        "start_move": new_movement.start_move,
+        "end_move": new_movement.end_move
     }

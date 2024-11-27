@@ -198,23 +198,3 @@ async def remove_client_token(token: str, session: Session = DBSessionDependency
     }
 
 
-
-
-
-#Extras para pruebas
-
-#Crear chess game
-@router.post("/game_p/", response_model=ChessGame, tags=["purebas"])
-async def create_chess_game(game: ChessGame, session: Session= DBSessionDependency):
-    session.add(game)
-    session.commit()
-    session.refresh(game)
-    return game
-
-#Crear chess movement
-@router.post("/movement_p/", response_model=ChessMovement, tags=["purebas"])
-async def create_chess_movement(movement: ChessMovement, session: Session= DBSessionDependency):
-    session.add(movement)
-    session.commit()
-    session.refresh(movement)
-    return movement
