@@ -176,15 +176,6 @@ async def upload_client_token(user_id: int, token: str, session: Session = DBSes
 #Elimina el token de todos los usuarios asociados y borra el registro del BoardClient
 @router.delete("/remove_client_token/{token}")
 async def remove_client_token(token: str, session: Session = DBSessionDependency):
-    """
-    Args:
-        token (str): Token del cliente a eliminar.
-        session (Session): Sesión de la base de datos.
-        
-    
-    Returns:
-        dict: Detalles de la operación realizada.
-    """
     # Buscar el BoardClient con el token
     board_client = session.query(BoardClient).filter(BoardClient.token == token).first()
     if not board_client:

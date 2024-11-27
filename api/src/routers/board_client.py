@@ -45,38 +45,6 @@ def create_unique_board_token(session: Session = DBSessionDependency):
             session.refresh(board_client)
             return board_client.token
 
-#Regresa el registro del BoardClient indicado con el id mandado
-@router.get("/{client_id}", response_model=BoardClient)
-def read_client(client_id: int, session: Session = DBSessionDependency):
-    client = session.get(BoardClient, client_id)
-    if not client:
-        raise HTTPException(status_code=404, detail="Client not found")
-    return client
-
-
-#Actualiza los dados enviados al BoardClient del id indicado.
-@router.put("/{client_id}", response_model=BoardClient)
-def update_client(client_id: int, updated_client: BoardClient, session: Session = DBSessionDependency):
-    client = session.get(BoardClient, client_id)
-    if not client:
-        raise HTTPException(status_code=404, detail="Client not found")
-    
-    client.token = updated_client.token
-    session.add(client)
-    session.commit()
-    session.refresh(client)
-    return client
-
-#Borra el BoardClient con el id dado
-@router.delete("/{client_id}")
-def delete_client(client_id: int, session: Session = DBSessionDependency):
-    client = session.get(BoardClient, client_id)
-    if not client:
-        raise HTTPException(status_code=404, detail="Client not found")
-    session.delete(client)
-    session.commit()
-    return {"ok": True}
-
 
 #Devuelve el token del BoardClient_id dado
 @router.get("/{client_id}/board_token", response_model=int)
@@ -89,23 +57,31 @@ def read_client(client_id: int, session: Session = DBSessionDependency):
 
 
 #Crea un nuevo juego con los dos primeros User que tengan el token dado. Si no encuentra User con dicho token manda error.
-@router.post("/board_game/{token}")
-def create_board_game(token: str, session: Session = DBSessionDependency):
+@router.post("/board_game/{token}/{opponent_id}")
+def create_board_game(token: str, opponent_id: int, session: Session = DBSessionDependency):
     
     # Obtener el BoardClient con el token
     board_client = session.query(BoardClient).filter(BoardClient.token == token).first()
     if not board_client:
         raise HTTPException(status_code=404, detail="BoardClient no encontrado")
 
-    # Obtener los dos primeros usuarios con este token
-    users = session.query(User).filter(User.board_token == board_client.token).all()
-    if len(users) < 2:
-        raise HTTPException(status_code=400, detail="No hay suficientes usuarios con el token dado")
+    # Obtener el usuario respectivo al token
+    user = session.query(User).filter(User.board_token == board_client.token).first()
+    if not user:
+        raise HTTPException(status_code=400, detail="No se encontró un usuario conectado a ese token")
+    
+    # Verifica que el usuario oponente exista
+    user_opponent = session.query(User).filter(User.id == opponent_id).first()
+    if not user_opponent:
+        raise HTTPException(status_code=400, detail="No se encontró un usuario oponente con ese id")
+    
+    if user.id == opponent_id:
+        raise HTTPException(status_code=400, detail="Ambos jugadores no pueden ser el mismo")
 
     # Crear el nuevo juego
     chess_game = ChessGame(
-        white_user_id=users[0].id,
-        black_user_id=users[1].id,
+        white_user_id= user.id,
+        black_user_id= opponent_id,
         status=0,  # Estatus inicial del juego
     )
     session.add(chess_game)
@@ -118,38 +94,10 @@ def create_board_game(token: str, session: Session = DBSessionDependency):
         "white_user_id": chess_game.white_user_id,
         "black_user_id": chess_game.black_user_id,
     }
-    
-    
-#Crea un ChessMovement conectado con el id del ChessGame especificado
-@router.post("/movement/{game_id}")
-def create_movement(game_id: int, session: Session = DBSessionDependency):
-    
-    # Verificar si el juego existe
-    chess_game = session.get(ChessGame, game_id)
-    if not chess_game:
-        raise HTTPException(status_code=404, detail="Juego no encontrado")
-
-    # Crear el movimiento
-    new_movement = ChessMovement(
-        game_id=game_id,
-        index=0,
-        encoded_movement=0,
-    )
-    session.add(new_movement)
-    session.commit()
-    session.refresh(new_movement)
-
-    return {
-        "message": "Movimiento creado exitosamente.",
-        "movement_id": new_movement.id,
-        "game_id": game_id,
-        "index": new_movement.index,
-        "encoded_movement": new_movement.encoded_movement,
-    }
 
 
 #Crea un ChessMovement con parametros dados y conectado con el id del ChessGame especificado
-@router.post("/movement_with_data/{game_id}")
+@router.post("/movement/{game_id}")
 def create_movement(game_id: int, index: int, encoded_movement: int, session: Session = DBSessionDependency):
     
     # Verificar si el juego existe
