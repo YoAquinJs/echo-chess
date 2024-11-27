@@ -1,134 +1,97 @@
 """
-defines the interface between the client and the hardware
+Shared interface with hardware for command, response and data specification
 """
 
-from abc import ABC, abstractmethod
-from dataclasses import dataclass
 from enum import Enum
+from typing import Literal
 
-from hardware.board_position import BoardPosition
+# the board position specification is in the model.board_position module as
+# board positions are shared among the system
 
+# Based on the maximum expected movement queue (32, all pieces at once)
+# plus a reasonable queue for other commands
+MAX_COMMAND_QUEUE = 50
 
-class HardwareCommand(ABC):
-    """hardware Command base class"""
+# size in bytes of command ids
+HARDWARE_COMMAND_ID_SIZE = 1
 
-    ENCODING = "ascii"
-    ID_LENGTH = 3  # used for test assertion
+# Further command specification such as arguments are kept in the
+# hardware.command module
 
-    def serialize(self) -> bytes:
-        """serializes the command for transmission"""
-
-        cmd = self.__class__.command_id().encode(HardwareCommand.ENCODING)
-        parameters = self._parameters()
-
-        if parameters is None:
-            return cmd
-        return cmd + parameters
-
-    @abstractmethod
-    def _parameters(self) -> bytes | None:
-        """serialize the parameters for the command"""
-
-    @classmethod
-    @abstractmethod
-    def command_id(cls) -> str:
-        """command keyword"""
+# encoding details
+ENCODING = "ascii"
+ENDIANNESS: Literal["big", "little"] = "big"
 
 
-@dataclass
-class AvailableCommand(HardwareCommand):
+class HardwareCommandId(Enum):
     """
-    returns OK when command is enabled, ERR otherwise
-    serialized: AVL<cmd>
+    Command Identifier Codes
+
+    AVAILABLE           0x00
+    MOVEMENT            0x01
+    CLEAR_MOVS          0x02
+    PRINT               0x0f
     """
 
-    cmd: type[HardwareCommand]
-
-    def _parameters(self) -> bytes | None:
-        if self.cmd == AvailableCommand:
-            return None
-        return self.cmd.command_id().encode(HardwareCommand.ENCODING)
-
-    @classmethod
-    def command_id(cls) -> str:
-        return "AVL"
+    AVAILABLE = 0x00
+    MOVEMENT = 0x01
+    CLEAR_MOVS = 0x02
+    PRINT = 0x0F
 
 
-@dataclass
-class MovemenetCommand(HardwareCommand):
+class HardwareCommandPriority(Enum):
     """
-    moves piece in origin to dest
-    serialized: MOV<origin: EncodedPosition><dest: EncodedPosition>
+    Command Priority
+    Priority is descendant
+
+    AVAILABLE           0
+    MOVEMENT            2
+    CLEAR_MOVS          1
+    PRINT               1
     """
 
-    origin: BoardPosition
-    dest: BoardPosition
-
-    def _parameters(self) -> bytes | None:
-        return self.origin.encode() + self.dest.encode()
-
-    @classmethod
-    def command_id(cls) -> str:
-        return "MOV"
+    AVAILABLE = 0
+    MOVEMENT = 2
+    CLEAR_MOVS = 1
+    PRINT = 1
 
 
-@dataclass
-class ClearCommand(HardwareCommand):
+class HardwareCommandTimeout(Enum):
     """
-    clears the movement queue
-    serialized: CLR
+    Command Identifier Codes
+
+    AVAILABLE           100
+    MOVEMENT            4000
+    CLEAR_MOVS          100
+    PRINT               100
     """
 
-    def _parameters(self) -> bytes | None:
-        return None
-
-    @classmethod
-    def command_id(cls) -> str:
-        return "CLR"
+    AVAILABLE = 100
+    MOVEMENT = 4000
+    CLEAR_MOVS = 100
+    PRINT = 100
 
 
-@dataclass
-class PrintCommand(HardwareCommand):
+class HardwareCommandResponse(Enum):
     """
-    prints via hardware the content provided
-    serialized: PTR<content: str>
-    """
+    Command Response Codes
 
-    content: str
-
-    def _parameters(self) -> bytes | None:
-        return self.content.encode(HardwareCommand.ENCODING)
-
-    @classmethod
-    def command_id(cls) -> str:
-        return "PTR"
-
-
-HARDWARE_COMMANDS: list[type[HardwareCommand]] = [
-    AvailableCommand,
-    MovemenetCommand,
-    ClearCommand,
-    PrintCommand,
-]
-
-
-class HardwareStatus(Enum):
-    """
-    represents status codes the hardware responds with, 1 byte long
-
-    Possible Status
-    OK: command received with no errors
-    ERROR: command received with errors
-    AVAILABLE: command available (only with AVL cmd)
-    UNAVAILABLE: command unavailable (only with AVL cmd)
+        No errors
+    EXECUTED            0x00
+    SKIPPED             0x01
+        Availability
+    AVAILABLE           0x0A
+    UNAVAILABLE         0x0B
+        Error
+    CLIENT_ERROR        0x10
+    HARDWARE_ERROR      0x11
     """
 
-    OK = 0
-    ERROR = 1
-    AVAILABLE = 2
-    UNAVAILABLE = 3
+    EXECUTED = 0x00
+    SKIPPED = 0x01
 
+    AVAILABLE = 0x0A
+    UNAVAILABLE = 0x0B
 
-AVAILABILITY_STATUSES = {HardwareStatus.AVAILABLE, HardwareStatus.UNAVAILABLE}
-STATUSES_WITHOUT_AVAILABILIY = {status.value for status in HardwareStatus}
-STATUSES_WITHOUT_AVAILABILIY.difference(AVAILABILITY_STATUSES)
+    CLIENT_ERROR = 0x10
+    HARDWARE_ERROR = 0x11
