@@ -1,0 +1,68 @@
+/* reto.css */
+
+/* Reseteamos márgenes y padding por defecto */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Estilo general del cuerpo */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f9;
+    color: #333;
+    line-height: 1.6;
+    padding: 20px;
+}
+
+/* Título principal */
+h1 {
+    font-size: 2.5rem;
+    color: #2c3e50;
+    margin-bottom: 20px;
+    text-align: center;
+    border-bottom: 3px solid #2980b9; /* Línea azul debajo del título */
+    padding-bottom: 10px; /* Espacio entre el texto y la línea */
+}
+
+/* Estilo para los subtítulos */
+h2 {
+    font-size: 1.8rem;
+    color: #2980b9;
+    margin-bottom: 15px;
+}
+
+/* Párrafos con la información de los jugadores */
+p {
+    font-size: 1.1rem;
+    margin-bottom: 10px;
+}
+
+/* Estilo para las listas de movimientos */
+ol {
+    margin-left: 20px;
+    font-size: 1.1rem;
+}
+
+/* Estilo para cada movimiento */
+li {
+    margin-bottom: 8px;
+}
+
+/* Estilo para los enlaces */
+a {
+    display: inline-block;
+    margin-top: 20px;
+    padding: 10px 15px;
+    background-color: #2980b9;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: bold;
+}
+
+/* Efecto hover para los enlaces */
+a:hover {
+    background-color: #3498db;
+}

@@ -1,0 +1,94 @@
+/* Estilo al cuerpo */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Times New Roman', Times, serif;
+    background: url('https://s0.smartresize.com/wallpaper/146/328/HD-wallpaper-chess-game-pawn.jpg') no-repeat center center fixed;
+    background-size: cover;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Estilo del contenedor del formulario */
+.container {
+    width: 400px;
+    background: rgba(241, 236, 236, 0.9);
+    border-radius: 10px;
+    padding: 40px;
+    box-sizing: border-box;
+    text-align: center;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+/* Título del formulario */
+.container h1 {
+    font-size: 34px;
+    margin-bottom: 20px;
+    color: #633E1B;
+    border-bottom: 2px solid #633E1B;
+    padding-bottom: 10px;
+}
+
+/* Estilo de las etiquetas y los campos de entrada */
+.input-group {
+    margin-bottom: 15px;
+    text-align: left;
+}
+
+/* Estilo para los inputs */
+input[type="text"], input[type="password"] {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+}
+
+/* botón de envío */
+button {
+    width: 100%;
+    padding: 12px;
+    font-size: 18px;
+    background-color: #633E1B;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s; /*transición cambio de color*/
+}
+
+/*color si le das click*/
+button:hover {
+    background-color: #A47C56;
+}
+
+/* Estilo del mensaje de error */
+.error-message {
+    color: red;
+    font-size: 14px;
+    background-color: #f8d7da;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #f5c6cb;
+    margin-top: 15px;
+    display: none;
+}
+
+/* Estilo para el enlace de registro */
+.registrar {
+    margin-top: 20px;
+    font-size: 18px;
+}
+
+/*crear usuario*/
+.registrar a {
+    color: blue; /* color del enlace */
+    text-decoration: none;
+}
+
+.registrar a:hover {
+    text-decoration: underline; /* subraya cuando el usuario pasa el mouse */
+}

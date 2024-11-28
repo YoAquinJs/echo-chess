@@ -1,0 +1,101 @@
+/*PÁGINA DE USUARIO*/
+/* Reseteo de márgenes y padding por defecto */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Estilo general para el body */
+body {
+    font-family: 'Times New Roman', Times, serif;
+    background: url('https://cdn.create.vista.com/api/media/small/514072858/stock-video-black-king-move-chessboard-close-cinematic?videoStaticPreview=true&token=') no-repeat center center fixed;
+    background-size: cover;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: black;
+    line-height: 1.6;
+}
+
+/* Contenedor principal */
+.container {
+    width: 600px; /* Ancho del contenedor */
+    background: rgba(219, 215, 215, 0.646);
+    border-radius: 10px;
+    padding: 40px;
+    box-sizing: border-box;
+    text-align: center;
+    box-shadow: 0 4px 10px rgba(219, 215, 215, 0.646);
+}
+
+/* Título principal de la página */
+.container h1 {
+    font-size: 2.5rem;
+    color: #4D2102;
+    margin-bottom: 20px;
+    border-bottom: 4px solid #4D2102;
+    padding-bottom: 10px;
+}
+
+/* Estilo para los párrafos con la información del usuario */
+p {
+    font-size: 1.2rem;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+/* Estilo para los enlaces de acciones */
+a {
+    display: inline-block;
+    padding: 10px 15px;
+    margin-top: 10px;
+    background-color: #4D2102;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: bold;
+    transition: background-color 0.3s;
+}
+
+/* Efecto hover para los enlaces */
+a:hover {
+    background-color: #6d3106d1;
+}
+
+/* Enlaces de acción específicos */
+a[href^="/user/"] {
+    margin-top: 20px;
+}
+
+/* Estilo para el enlace de cerrar sesión */
+a[href='/'] {
+    background-color: #b84134;
+}
+
+a[href='/']:hover {
+    background-color: #d34939;
+}
+
+/* Estilo de mensajes de éxito o error */
+.message {
+    padding: 10px;
+    border-radius: 5px;
+    font-size: 16px;
+    margin-bottom: 15px;
+}
+
+.success {
+    background-color: #d4edda;
+    border: 1px solid #c3e6cb;
+    color: #155724;
+    display: none;
+}
+
+.error {
+    background-color: #f8d7da;
+    border: 1px solid #f5c6cb;
+    color: #721c24;
+    display: none;
+}

@@ -1,0 +1,77 @@
+/* reto.css */
+
+/* Reseteo de márgenes y padding por defecto */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Estilo general para el cuerpo de la página */
+body {
+    font-family: 'Times New Roman', Times, serif;
+    background-color: #f4f4f9;
+    color: #333;
+    line-height: 1.6;
+    padding: 20px;
+}
+
+/* Título principal de la página */
+h1 {
+    font-size: 2.5rem;
+    color: #2c3e50;
+    text-align: center;
+    margin-bottom: 20px;
+    border-bottom: 3px solid #2980b9; /* Línea azul debajo del título */
+    padding-bottom: 10px; /* Espacio entre el texto y la línea */
+}
+
+/* Estilo para la lista de juegos */
+ul {
+    list-style-type: none;  /* Quitamos los puntos de la lista */
+    padding-left: 0;        /* Quitamos el padding izquierdo */
+}
+
+/* Estilo para cada juego en la lista */
+li {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    padding: 15px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+/* Efecto hover para cada item de la lista */
+li:hover {
+    background-color: #ecf0f1;
+}
+
+/* Estilo para los enlaces dentro de la lista */
+a {
+    text-decoration: none;
+    color: #2980b9;
+    font-weight: bold;
+}
+
+/* Efecto hover para los enlaces */
+a:hover {
+    color: #3498db;
+}
+
+/* Estilo para el enlace de regreso */
+a[href^="/user/"] {
+    display: inline-block;
+    margin-top: 20px;
+    padding: 10px 15px;
+    background-color: #2980b9;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: bold;
+}
+
+/* Efecto hover para el enlace de regreso */
+a[href^="/user/"]:hover {
+    background-color: #3498db;
+}
