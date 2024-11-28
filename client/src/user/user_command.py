@@ -65,7 +65,7 @@ class MoveCommand(UserCommand):
 class StartGameCommand(UserCommand):
     """Represents a command to start the game."""
 
-    keyword = "start"  # Palabra clave para el comando
+    keyword = "start" 
 
     args = []  
 
@@ -91,11 +91,11 @@ def parse_command(text: str) -> UserCommand:
     logging.info("Parsing command: %s", text)
 
     if text.startswith("move"):
-        return MoveCommand(text[4:].strip())  # Procesa movimientos de ajedrez
+        return MoveCommand(text[4:].strip())  
     elif text.startswith("start"):
-        return StartGameCommand()  # Procesa inicio de partida
+        return StartGameCommand()  
     elif text.startswith("get_token"):
-        return GetTokenCommand()  # Procesa obtención de token
+        return GetTokenCommand()  
     else:
         raise ValueError(f"Unknown command: {text}")
     
