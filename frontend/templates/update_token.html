@@ -1,81 +1,73 @@
-<!-- templates/update_token.html -->
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="/static/update_token.css"> <!--Enlazamos con css-->
+    <!-- <link rel="stylesheet" href="/static/update_token.css"> Enlazamos con css-->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Actualizar Token</title>
 </head>
 <body>
-    <div class="container"> <!-- Contenedor para el formulario -->
+    <div id="main-container">
         <h1>Actualizar Token</h1>
+        <p id="loading-message">Cargando datos...</p>
+        <div id="user-data" style="display: none;">
+            <p>Usuario: <span id="username"></span></p>
+            <p>Token actual: <span id="user-token">Cargando...</span></p>
 
-        <!-- Mostrar mensaje de éxito o error -->
-        {% if message %}
-            <div class="message success">
-                <p>{{ message }}</p>
-            </div>
-        {% elif error %}
-            <div class="message error">
-                <p>{{ error }}</p>
-            </div>
-        {% endif %} 
-
-        <!-- Mostrar el usuario actual -->
-        <h2>Usuario: {{ user.username }}</h2>
-
-        <!-- Formulario para actualizar el token -->
-        <form id="token-form">
-            <div class="input-group">
-                <label for="token">Nuevo Token (dejar vacío para nulo):</label><br>
-                <input type="text" id="token" name="token" value="{{ user.board_token or '' }}"><br><br>
-            </div>
-            <button type="submit">Actualizar Token</button>
-        </form>
-
-        <br>
-        <!-- Enlace para volver a la página del usuario -->
-        <a href="/user/{{ user.id }}">Volver a la página de usuario</a>
+            <form id="token-form">
+                <label for="token">Nuevo Token:</label>
+                <input type="text" id="token" name="token">
+                <button type="submit">Actualizar Token</button>
+            </form>
+            <a href="/web/user/{{user_id}}/games">Volver</a>
+        </div>
     </div>
 
     <script>
-        // Obtener el formulario y agregar el listener para la acción
-        // Obtén el formulario y agrega el listener para la acción
-document.getElementById("token-form").addEventListener("submit", async function (e) {
-    e.preventDefault();  // Prevenir el comportamiento por defecto del formulario
+        const userId = {{ user_id }}; // ID del usuario proporcionado por el servidor
+        const userApiUrl = `/user/${userId}`;
+        const updateTokenApiUrl = `/user/${userId}/update_token`;
 
-    const tokenValue = document.getElementById("token").value;
-    const userId = {{ user.id }};
-    const token = tokenValue ? tokenValue : null;
-
-    try {
-        // Realiza la solicitud a la API para actualizar el token
-        const response = await fetch(`/user/${userId}/update_token`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',  // Indicamos que el contenido es JSON
-            },
-            body: JSON.stringify({ token: token }),  // Convertimos el token a JSON
-        });
-
-        if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(errorData.detail || "Error al actualizar el token");
+        async function loadUserData() {
+            try {
+                const response = await fetch(userApiUrl);
+                if (!response.ok) throw new Error("Error al cargar los datos del usuario");
+                const userData = await response.json();
+                document.getElementById("username").textContent = userData.name || "Sin nombre";
+                document.getElementById("user-token").textContent = userData.board_token ?? "Sin token";
+                document.getElementById("loading-message").style.display = "none";
+                document.getElementById("user-data").style.display = "block";
+            } catch (error) {
+                alert(error.message);
+            }
         }
 
-        // Si la respuesta es exitosa, manejar el mensaje de éxito
-        const data = await response.json();
-        alert(data.message || "Token actualizado correctamente");
-
-        // Redirigir al usuario a su página
-        window.location.href = `/user/${userId}`;
-        } catch (error) {
-            // Si hay algún error, mostrar el mensaje
-            alert("Error: " + error.message);
+        async function updateToken(event) {
+            event.preventDefault();
+            const token = document.getElementById("token").value;
+        
+            if (!token) {
+                //const token= Null;
+                alert("Por favor, ingresa un token válido.");
+                return;
+            }
+        
+            const uploadTokenApiUrl = `/user/${userId}/update_token/${encodeURIComponent(token)}`;
+        
+            try {
+                const response = await fetch(uploadTokenApiUrl, { method: "POST" });
+                if (!response.ok) throw new Error("Token invalido");
+                const result = await response.json();
+                alert(result.message);
+                
+            } catch (error) {
+                alert(error.message);
+            }
+            loadUserData();
         }
-    });
 
+        document.addEventListener("DOMContentLoaded", loadUserData);
+        document.getElementById("token-form").addEventListener("submit", updateToken);
     </script>
 </body>
 </html>

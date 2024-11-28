@@ -4,7 +4,7 @@ body {
     margin: 0;
     padding: 0;
     font-family: 'Times New Roman', Times, serif;
-    background: url('https://cdn.pixabay.com/photo/2018/05/11/14/47/chess-3390711_960_720.jpg') no-repeat center center fixed;
+    background-color: #e5caa0;
     background-size: cover;
     height: 100vh;
     display: flex;

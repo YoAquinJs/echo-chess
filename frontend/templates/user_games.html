@@ -8,8 +8,10 @@
 </head>
 <body>
     <h1>Juegos del Usuario</h1>
+    <a href="/web/user/{{user.id}}/update_token">Actualizar token</a>
+    <br>
     <ul id="games-list"></ul>
-    <a href="/web/user/login">Regresar</a>
+    <a href="/web/user/login">Salir</a>
 
     <script>
         async function loadUserGames() {
