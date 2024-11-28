@@ -1,0 +1,100 @@
+/*--- CAMBIAR CONTRASEÑA ---*/
+/* Estilo general para el body */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Times New Roman', Times, serif;
+    background: url('https://cdn.pixabay.com/photo/2018/05/11/14/47/chess-3390711_960_720.jpg') no-repeat center center fixed;
+    background-size: cover;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Estilo del contenedor principal */
+.container {
+    width: 600px; /*ancho contenedor de formulario*/
+    background: rgba(227, 224, 224, 0.9);
+    border-radius: 10px;
+    padding: 40px;
+    box-sizing: border-box;
+    text-align: center;
+    box-shadow: 0 4px 10px rgba(227, 224, 224, 0.9);
+}
+
+/* Título del formulario */
+.container h1 {
+    font-size: 34px;
+    margin-bottom: 20px;
+    color: #7D694A;
+    border-bottom: 2px solid #7D694A;
+    padding-bottom: 10px;
+}
+
+/* Estilo de las etiquetas y los campos de entrada */
+.input-group {
+    margin-bottom: 15px;
+    text-align: left;
+}
+
+/* Estilo para los inputs */
+input[type="text"] {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+}
+
+/* Estilo para los botones */
+input[type="submit"] {
+    width: 100%;
+    padding: 12px;
+    font-size: 18px;
+    background-color: #7D694A;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s; /* Transición de cambio de color */
+}
+
+/* Color cuando se pasa el mouse sobre el botón */
+input[type="submit"]:hover {
+    background-color: #C5AF8D;
+}
+
+/* Estilo del mensaje de éxito o error */
+.message {
+    padding: 10px;
+    border-radius: 5px;
+    font-size: 16px;
+    margin-bottom: 15px;
+}
+
+.success {
+    background-color: #d4edda;
+    border: 1px solid #c3e6cb;
+    color: #155724;
+    display: none;
+}
+
+.error {
+    background-color: #f8d7da;
+    border: 1px solid #f5c6cb;
+    color: #721c24;
+    display: none;
+}
+
+/* Estilo del enlace */
+a {
+    color: #007bff;
+    text-decoration: none;
+    font-size: 20px;
+}
+
+a:hover {
+    text-decoration: underline;
+}
