@@ -5,11 +5,30 @@ from sqlmodel import Session
 from fastapi.responses import JSONResponse, RedirectResponse
 
 #from auth.dependencies import UserTokenDependency
-from database.models.user_db import User
-from database.models.chess_game_db import ChessGame
-from database.models.chess_movement_db import ChessMovement
-from database.models.board_client_db import BoardClient
-from database.dependencies import DBSessionDependency
+from api.database.models.user_db import User
+from api.database.models.chess_game_db import ChessGame
+from api.database.models.chess_movement_db import ChessMovement
+from api.database.models.board_client_db import BoardClient
+from api.database.dependencies import DBSessionDependency
+
+import hashlib
+import os
+
+# Función para hashear una contraseña con un "salt"
+import hashlib
+import os
+
+def hash_password(password: str, salt_length=32) -> str:
+    salt = os.urandom(salt_length)
+    password_hash = hashlib.sha256(salt + password.encode('utf-8')).hexdigest()
+    return f"{salt.hex()}${password_hash}"
+
+def verify_password(plain_password: str, hashed_password: str) -> bool:
+    salt_hex, hash_hex = hashed_password.split('$')
+    salt = bytes.fromhex(salt_hex)
+    password_hash = hashlib.sha256(salt + plain_password.encode('utf-8')).hexdigest()
+    return password_hash == hash_hex
+
 
 
 router = APIRouter(
@@ -142,6 +161,39 @@ async def update_user_token(
 
     session.commit()
     return {"message": message, "user_id": user.id, "updated_token": user.board_token}
+
+
+
+# Actualiza el token de un usuario dado solo si el token existe en algún cliente
+@router.post("/{user_id}/update_token/{token}")
+async def update_user_token(user_id: int, token: str, session: Session = DBSessionDependency):
+    print(f"Recibido user_id={user_id}, token={token}")  # DEBUG: log entrada
+
+    # Buscar al usuario
+    user = session.get(User, user_id)
+    if not user:
+        raise HTTPException(status_code=404, detail="Usuario no encontrado")
+
+    # Buscar un cliente existente con ese token
+    board_client = session.query(BoardClient).filter(BoardClient.token == token).first()
+    
+    # Si no existe el BoardClient con el token, devolver un error
+    if not board_client:
+        raise HTTPException(status_code=400, detail="El token ingresado no pertenece a un BoardClient válido.")
+
+    # Asociar el token al usuario
+    user.board_token = board_client.token
+    session.commit()
+    session.refresh(user)
+
+    print(f"Usuario {user.id} asociado al token {board_client.token}")  # DEBUG: log éxito
+
+    return {
+        "message": "Token asociado correctamente.",
+        "user_id": user.id,
+        "client_id": board_client.id,
+        "client_token": board_client.token,
+    }
 
 
 # Crea o asocia un BoardClient con un token dado al usuario especificado

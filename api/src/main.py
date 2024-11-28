@@ -31,6 +31,9 @@ def main():
     """start api on script execution"""
 
     uvicorn.run(app, host="127.0.0.1", port=8000)
+    #uvicorn.run(app, host="0.0.0.0", port=8000)
+    #192.168.100.52    IPv4
+    #http://192.168.100.52:8000/web/user/create
 
 
 if __name__ == "__main__":
