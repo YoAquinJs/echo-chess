@@ -2,6 +2,7 @@
 
 from fastapi import APIRouter, HTTPException, Depends, Form
 from sqlmodel import Session
+from fastapi.responses import JSONResponse, RedirectResponse
 
 #from auth.dependencies import UserTokenDependency
 from database.models.user_db import User
@@ -26,13 +27,15 @@ async def create_user(user: User, session: Session= DBSessionDependency):
     return user
 
 
+
 #Obtener información de un usuario (requiere autenticación)
 @router.get("/{user_id}", response_model=User)
-async def get_user(user_id: int, session: Session= DBSessionDependency):
-    user= session.get(User, user_id)
+async def get_user(user_id: int, session: Session = DBSessionDependency):
+    user = session.get(User, user_id)
     if not user:
         raise HTTPException(status_code=404, detail="Usuario no encontrado")
     return user
+
 
 
 #Actualizar información de un usuario (requiere autenticación)
@@ -198,3 +201,86 @@ async def remove_client_token(token: str, session: Session = DBSessionDependency
     }
 
 
+
+
+
+
+
+
+
+# ----------------- WEB ----------------------------
+
+
+
+# Endpoint para loguear un usuario
+@router.post("/login")  # Ruta fija para login
+async def login_user(request: User, session: Session = DBSessionDependency):
+    # Buscar al usuario por nombre
+    user_log = session.query(User).filter(User.name == request.name).first()
+    if not user_log:
+        raise HTTPException(status_code=404, detail="Usuario no encontrado")
+    
+    # Verificar la contraseña
+    if user_log.password != request.password:
+        raise HTTPException(status_code=401, detail="Contraseña incorrecta")
+
+    # Retornar un mensaje de éxito o token si es necesario
+    return {"user_id": user_log.id}
+    #return RedirectResponse(url=f"/web/user/{user_log.id}")
+
+
+#Crea un usuario en base a name y password enviados
+@router.post("/user/create")
+async def create_user(name: str = Form(...), password: str = Form(...), session: Session = DBSessionDependency):
+    # Verificar si el nombre ya existe
+    existing_user = session.query(User).filter(User.name == name).first()
+    if existing_user:
+        raise HTTPException(status_code=400, detail="El nombre de usuario ya está en uso")
+
+    # Crear el nuevo usuario
+    new_user = User(name=name, password=password)
+    session.add(new_user)
+    session.commit()
+    session.refresh(new_user)
+
+    # Retornar el user_id para redirección
+    return {"user_id": new_user.id}
+
+
+@router.post("/userWW")
+async def create_user(request: User, session: Session = DBSessionDependency):
+    # Verificar si el nombre ya existe
+    existing_user = session.query(User).filter(User.name == request.name).first()
+    if existing_user:
+        raise HTTPException(status_code=400, detail="El nombre de usuario ya está en uso")
+
+    # Crear el nuevo usuario
+    new_user = User(name=request.name, password=request.password)
+    session.add(new_user)
+    session.commit()
+    session.refresh(new_user)
+
+    # Retornar el user_id para que el frontend pueda redirigir
+    return {"user_id": new_user.id}
+
+
+
+@router.get("/user/{user_id}/profile_with_games", response_model=dict)
+async def get_user_profile_with_games(user_id: int, session: Session = DBSessionDependency):
+    # Obtener datos del usuario
+    user = session.query(User).filter(User.id == user_id).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="Usuario no encontrado")
+
+    # Obtener partidas del usuario
+    games = (
+        session.query(ChessGame)
+        .filter((ChessGame.white_user_id == user_id) | (ChessGame.black_user_id == user_id))
+        .all()
+    )
+
+    # Formatear la respuesta
+    return {
+        "user": {"id": user.id, "name": user.name},
+        "games": [{"id": game.id, "status": game.status} for game in games],
+    }
