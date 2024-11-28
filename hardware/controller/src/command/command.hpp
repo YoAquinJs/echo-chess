@@ -1,23 +1,26 @@
 #ifndef CONTROLLER_COMMAND_H
-#define CONTROLLER_COMMAND_H 
+#define CONTROLLER_COMMAND_H
+
+#include "WString.h"
 
 #include "interface.hpp"
 
+// abstract command interface
 struct Command {
-    virtual void Execute() = 0;
-    virtual ResponseStatus Parse(String args) = 0;
-
-    // allocates a new command into decoded_command
-    static ResponseStatus DecodeCommand(String raw_input,
-                                        Command** decoded_command);
+    // execution steps for the command
+    virtual CommandResponse Execute() = 0;
+    // parsing the args for the command, return EXECUTE if no error, else return
+    // corresponding (client or hardware)
+    virtual CommandResponse Parse(String args) = 0;
 };
 
 class AvailableCommand : public Command {
-    CommandCode command;
+    CommandId command;
 
    public:
-    void Execute();
-    ResponseStatus Parse(String args);
+    AvailableCommand() = default;
+    CommandResponse Execute();
+    CommandResponse Parse(String args);
 };
 
 class MovementCommand : public Command {
@@ -25,22 +28,25 @@ class MovementCommand : public Command {
     EncodedPosition dest;
 
    public:
-    void Execute();
-    ResponseStatus Parse(String args);
+    MovementCommand() = default;
+    CommandResponse Execute();
+    CommandResponse Parse(String args);
 };
 
-class ClearCommand : public Command {
+class ClearMovementsCommand : public Command {
    public:
-    void Execute();
-    ResponseStatus Parse(String args);
+    ClearMovementsCommand() = default;
+    CommandResponse Execute();
+    CommandResponse Parse(String args);
 };
 
 class PrintCommand : public Command {
     String content;
 
    public:
-    void Execute();
-    ResponseStatus Parse(String args);
+    PrintCommand() = default;
+    CommandResponse Execute();
+    CommandResponse Parse(String args);
 };
 
-#endif // CONTROLLER_COMMAND_H
+#endif  // CONTROLLER_COMMAND_H
