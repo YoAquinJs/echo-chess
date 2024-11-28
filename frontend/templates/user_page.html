@@ -1,19 +1,45 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Usuario {{ user.name }}</title>
 </head>
 <body>
-    <h1>Información del Usuario</h1>
-    <p><strong>Nombre:</strong> {{ user.name }}</p>
-    <p><strong>Token:</strong> {{ user.board_token if user.board_token else "No registrado" }}</p>
-    <br>
-    <a href="/user/{{ user.id }}/update_token">Actualizar token</a>
-    <br>
-    <a href="/user/{{ user.id }}/games">Ver juegos</a>
-    <br><br>
-    <a href="/">Cerrar sesión</a>
+    <div class="container">
+        <h1>Información del Usuario</h1>
+        <p><strong>Nombre:</strong> {{ user.name }}</p>
+        <p><strong>Token:</strong> {{ user.board_token if user.board_token else "No registrado" }}</p>
+        
+        <a href="/user/{{ user.id }}/update_token">Actualizar token</a>
+        <a href="/user/{{ user.id }}/games">Ver los juegos</a>
+        
+        <br><br>
+        <a href="/">Cerrar sesión</a>
+    </div>
+
+    
+    <script>
+        async function loadUserData() {
+            const userId = "{{ user_id }}"; // Obtén el user_id desde el servidor
+        
+            try {
+                const response = await fetch(`/user/${userId}`);
+                if (response.ok) {
+                    const user = await response.json();
+                    document.querySelector("p[name='username']").textContent = user.name;
+                    document.querySelector("p[name='board_token']").textContent = user.board_token || "No registrado";
+                } else {
+                    alert("No se pudo cargar la información del usuario.");
+                }
+            } catch (err) {
+                console.error("Error de red:", err);
+                alert("Error al conectarse con el servidor.");
+            }
+        }
+        
+        loadUserData();
+    </script>
+    
 </body>
 </html>

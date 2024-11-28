@@ -1,23 +1,42 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Juegos de {{ user.name }}</title>
 </head>
 <body>
-    <h1>Juegos del Usuario {{ user.name }}</h1>
-    <ul>
-        {% if games %}
-            {% for game in games %}
-            <li> 
-                <a href="/user/{{user.id}}/games/{{ game.id }}/movements">Juego ID: {{ game.id }}</a>, Estado: {{ game.status }} 
-            </li>    
-            {% endfor %}
-        {% else %}
-            <li>No hay juegos registrados</li>
-        {% endif %}
-    </ul>
-    <a href="/user/{{ user.id }}">Regresar</a>
+    <h1>Juegos del Usuario</h1>
+    <ul id="games-list"></ul>
+    <a href="/web/user/login">Regresar</a>
+
+    <script>
+        async function loadUserGames() {
+            const userId = "{{ user.id }}"; // Asumiendo que `user.id` es accesible
+            try {
+                const response = await fetch(`/user/${userId}/games`);
+                if (response.ok) {
+                    const data = await response.json();
+                    const gamesList = document.getElementById("games-list");
+                    if (data.length > 0) {
+                        gamesList.innerHTML = data.map(game => `
+                            <li>
+                                <a href="/web/user/${userId}/games/${game.id}/movements">Juego ID: ${game.id}</a> - Estado: ${game.status}
+                            </li>
+                        `).join("");
+                    } else {
+                        gamesList.innerHTML = "<li>No hay juegos registrados</li>";
+                    }
+                } else {
+                    alert("No se encontraron juegos.");
+                }
+            } catch (err) {
+                console.error("Error de red:", err);
+                alert("Error al conectarse con el servidor.");
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", loadUserGames);
+    </script>
 </body>
 </html>

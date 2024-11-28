@@ -6,14 +6,42 @@
 </head>
 <body>
     <h1>Partida #{{ game_id }}</h1>
-    <p><strong>Jugador Blanco:</strong> {{ white_user }}</p>
-    <p><strong>Jugador Negro:</strong> {{ black_user }}</p>
+    <!--  <p><strong>Jugador Blanco:</strong> {{ white_user }}</p> 
+    <p><strong>Jugador Negro:</strong> {{ black_user }}</p>  -->
     <h2>Movimientos</h2>
-    <ol>
+    <ul>
         {% for movement in movements %}
-        <li>Movimiento {{ movement.index }}: {{ movement.encoded_movement }}</li>
+        <li>Movimiento {{ movement.index }}: {{ movement.start_move }} to {{ movement.end_move }}</li>
         {% endfor %}
-    </ol>
-    <a href="/user/{{user_id}}/games">Volver a juegos</a>
+    </ul>
+    <a href="/web/user/{{user_id}}/games">Volver a juegos</a>
+    
+    <script>
+        async function loadMovements() {
+            const userId = "{{ user_id }}";
+            const gameId = "{{ game_id }}";
+    
+            try {
+                const response = await fetch(`/user/${userId}/games/${gameId}/movements`);
+                if (response.ok) {
+                    const movements = await response.json();
+                    const movementList = document.querySelector("ul");
+                    movementList.innerHTML = movements.map(movement => `
+                        <li>Movimiento ${movement.index}: ${movement.start_move} to ${movement.end_move}</li>
+                    `).join("");
+                } else {
+                    alert("No se encontraron movimientos.");
+                }
+            } catch (err) {
+                console.error("Error de red:", err);
+                alert("Error al conectarse con el servidor.");
+            }
+        }
+    
+        document.addEventListener("DOMContentLoaded", loadMovements);
+    </script>
+    
 </body>
 </html>
+
+    
