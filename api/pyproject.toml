@@ -4,7 +4,8 @@ version = "0.1.0"
 description = ""
 authors = ["YoAquinjs <sebascertuche@gmail.com>"]
 readme = "README.md"
-package-mode = false
+packages = [{ include = "*", from = "./src" }]
+# package-mode = false
 
 [tool.poetry.dependencies]
 python = "^3.12"
@@ -12,21 +13,22 @@ uvicorn = "^0.32.0"
 fastapi = "^0.115.4"
 sqlmodel = "^0.0.22"
 python-dotenv = "^1.0.1"
+mypy = "^1.13.0"
 
 
 [tool.poetry.group.dev.dependencies]
 pylint = "^3.3.1"
 black = "^24.10.0"
 isort = "^5.13.2"
-
+mypy = "^1.13.0"
 
 [tool.poetry.group.test.dependencies]
 pytest = "^8.3.3"
+hypothesis = "^6.119.4"
 
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
-
 
 [tool.black]
 line-length = 79
