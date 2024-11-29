@@ -12,18 +12,18 @@ CommandResponse MovementCommand::Execute() {
 CommandResponse MovementCommand::Parse(String args) {
     origin = EncodedPosition(args[0]);
     dest = EncodedPosition(args[1]);
-    return CommandResponse::EXECUTE;
+    return CommandResponse::EXECUTED;
 }
 
 CommandResponse ClearMovementsCommand::Execute() {
 }
 CommandResponse ClearMovementsCommand::Parse(String args) {
-    return CommandResponse::EXECUTE;
+    return CommandResponse::EXECUTED;
 }
 
 CommandResponse PrintCommand::Execute() {
 }
 CommandResponse PrintCommand::Parse(String args) {
     content = args;
-    return CommandResponse::EXECUTE;
+    return CommandResponse::EXECUTED;
 }

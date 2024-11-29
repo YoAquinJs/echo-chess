@@ -82,18 +82,19 @@ enum CommandResponse {
 
 // encoded position
 struct EncodedPosition {
-    const EncPos coordX : COORD_BIT_SIZE;
-    const EncPos coordY : COORD_BIT_SIZE;
+    EncPos coordX : COORD_BIT_SIZE;
+    EncPos coordY : COORD_BIT_SIZE;
 
     EncodedPosition();
+
     explicit EncodedPosition(EncPos pos);
 };
 
 // encoded movement, represents signed distances between positions
 struct EncodedMovement {
     // signed distances between the two positions
-    const EncMov distX : COORD_BIT_SIZE + 1;
-    const EncMov distY : COORD_BIT_SIZE + 1;
+    EncMov distX : COORD_BIT_SIZE + 1;
+    EncMov distY : COORD_BIT_SIZE + 1;
 
     EncodedMovement(EncodedPosition origin, EncodedPosition dest);
 };

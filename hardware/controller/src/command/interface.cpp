@@ -1,13 +1,15 @@
 #include "interface.hpp"
 
-CommandPriority IdPriorityMap[] = {
-    [CommandId::AVAILABLE_ID] = CommandPriority::AVAILABLE_PRIORITY,
-    [CommandId::MOVEMENT_ID] = CommandPriority::MOVEMENT_PRIORITY,
-    [CommandId::CLEAR_MOVS_ID] = CommandPriority::CLEAR_MOVS_PRIORITY,
-    [CommandId::PRINT_ID] = CommandPriority::PRINT_PRIORITY,
-};
-
 CommandPriority CommandPriorityMap(CommandId id) {
+    CommandPriority IdPriorityMap[CommandId::PRINT_ID];
+
+    IdPriorityMap[CommandId::AVAILABLE_ID] =
+        CommandPriority::AVAILABLE_PRIORITY;
+    IdPriorityMap[CommandId::MOVEMENT_ID] = CommandPriority::MOVEMENT_PRIORITY;
+    IdPriorityMap[CommandId::CLEAR_MOVS_ID] =
+        CommandPriority::CLEAR_MOVS_PRIORITY;
+    IdPriorityMap[CommandId::PRINT_ID] = CommandPriority::PRINT_PRIORITY;
+
     return IdPriorityMap[id];
 }
 
