@@ -35,14 +35,12 @@ class HardwareCommunicationHandler(ABC):
         self._transmission_lock = asyncio.Lock()
 
         # mirror of the hardware PQueue, synchronizes responses
-        # queue size if max minus one because top of queue is _pending_response
         self._command_queue_mirror: asyncio.PriorityQueue[HardwareResponse] = (
-            asyncio.PriorityQueue(maxsize=MAX_COMMAND_QUEUE - 1)
+            asyncio.PriorityQueue(maxsize=MAX_COMMAND_QUEUE)
         )
-        self._pending_response: HardwareResponse | None
 
         self.setup()
-        asyncio.run(self._fetch_available_commands())
+        asyncio.create_task(self._fetch_available_commands())
 
     @classmethod
     def instantiated(cls) -> bool:
@@ -73,29 +71,25 @@ class HardwareCommunicationHandler(ABC):
 
         # synchronizes command dispatch to be bounded at MAX_COMMAND_QUEUE
         await self._command_queue_mirror.put(response)
-        if self._command_queue_mirror.qsize() == 1:
-            self._get_next_pending()
 
         async with self._transmission_lock:
-            await asyncio.to_thread(self._send_command, command)
+            await asyncio.to_thread(self._transmit_command, command)
 
         await response.wait()
         return response.value
 
-    async def _recieve_response(
-        self, command_response: HardwareCommandResponse
-    ) -> None:
+    def _recieve_response(self, command_response: HardwareCommandResponse) -> None:
         """
         receives command from hardware, and updates handler queue state
 
         raises HardwareError on non expected received response
         """
 
-        if self._pending_response is None:
+        if self._command_queue_mirror.empty():
             raise HardwareError("received non expected hardware response")
 
-        self._pending_response.respond(command_response)
-        self._get_next_pending()
+        response = self._command_queue_mirror.get_nowait()
+        response.respond(command_response)
 
     async def _fetch_available_commands(self) -> None:
         """fetch available commands from hardware and cache them"""
@@ -111,12 +105,6 @@ class HardwareCommunicationHandler(ABC):
             if command_response == HardwareCommandResponse.AVAILABLE:
                 self.capabilities.add(HardwareCommand.from_id(command_id))
 
-    def _get_next_pending(self) -> None:
-        """pop from queue to pending response"""
-
-        self._pending_response = self._command_queue_mirror.get_nowait()
-        self._pending_response.pending()
-
     def __del__(self):
         """cleanup the transmitter"""
 
@@ -131,9 +119,12 @@ class HardwareCommunicationHandler(ABC):
         """cleans up the transmitter"""
 
     @abstractmethod
-    def _send_command(self, command: HardwareCommand) -> None:
-        """send command synchronously"""
+    def _transmit_command(self, command: HardwareCommand) -> None:
+        """transmits command synchronously"""
 
     @abstractmethod
     def _response_listener(self) -> None:
-        """listener to hardware responses synchronously"""
+        """
+        listener to hardware responses synchronously, uses _recieve_response
+        for command queueing
+        """
