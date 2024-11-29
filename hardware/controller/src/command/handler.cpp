@@ -1,6 +1,7 @@
 #include "HardwareSerial.h"
 
 #include "handler.hpp"
+#include "src/serial/serial.hpp"
 #include <cstring>
 
 void CommandHandlerSetup() {
@@ -15,9 +16,8 @@ void CommandHandlerTask(void* pvParameters) {
             continue;
         }
 
-        handler.CommandInterface()->Execute();
-
-        // TODO serial response
+        CommandResponse response = handler.CommandInterface()->Execute();
+        SerialResponse(response);
     }
 }
 
