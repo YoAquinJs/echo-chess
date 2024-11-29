@@ -3,7 +3,7 @@ Shared interface with hardware for command, response and data specification
 """
 
 from enum import Enum
-from typing import Literal
+from typing import Literal, cast
 
 # the board position specification is in the model.board_position module as
 # board positions are shared among the system
@@ -71,6 +71,9 @@ class HardwareCommandTimeout(Enum):
     CLEAR_MOVS = 100
     PRINT = 100
 
+    def __int__(self):
+        return cast(int, self.value)
+
 
 class HardwareCommandResponse(Enum):
     """
@@ -80,8 +83,8 @@ class HardwareCommandResponse(Enum):
     EXECUTED            0x00
     SKIPPED             0x01
         Availability
-    AVAILABLE           0x0A
-    UNAVAILABLE         0x0B
+    AVAILABLE           0xA0
+    UNAVAILABLE         0xB0
         Error
     CLIENT_ERROR        0x10
     HARDWARE_ERROR      0x11
@@ -90,8 +93,8 @@ class HardwareCommandResponse(Enum):
     EXECUTED = 0x00
     SKIPPED = 0x01
 
-    AVAILABLE = 0x0A
-    UNAVAILABLE = 0x0B
+    AVAILABLE = 0xA0
+    UNAVAILABLE = 0xB0
 
     CLIENT_ERROR = 0x10
     HARDWARE_ERROR = 0x11
