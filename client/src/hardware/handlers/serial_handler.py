@@ -10,7 +10,7 @@ from serial import Serial, SerialException
 
 from hardware.command import HardwareCommand
 from hardware.comunication_handler import HardwareCommunicationHandler
-from hardware.interface import ENDIANNESS, HardwareCommandResponse
+from hardware.interface import HardwareCommandResponse
 
 PORT_ENV = "ECHO_CHESS_SERIAL_PORT"
 BAUDRATE_ENV = "ECHO_CHESS_SERIAL_BAUDRATE"
@@ -41,9 +41,13 @@ class HardwareCommunicationSerialHandler(HardwareCommunicationHandler):
                 exclusive=True,  # ensures no other process interferes with the port
             )
         except SerialException as e:
-            raise RuntimeError(f"unable to start serial com with '{port}'") from e
+            raise RuntimeError(
+                f"unable to start serial com with '{port}'"
+            ) from e
         except ValueError as e:
-            raise RuntimeError("invalid environment variables configuration") from e
+            raise RuntimeError(
+                "invalid environment variables configuration"
+            ) from e
 
         self.port = self.serial.name
 

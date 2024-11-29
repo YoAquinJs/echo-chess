@@ -58,7 +58,8 @@ class BoardPosition:
         col = ord(position[1]) - ord("a") + 1
 
         if not (
-            (0 < row < BoardPosition.MAX_ROW) and (0 < col < BoardPosition.MAX_COL)
+            (0 < row < BoardPosition.MAX_ROW)
+            and (0 < col < BoardPosition.MAX_COL)
         ):
             raise ValueError("invalid chess encoding")
 
@@ -101,7 +102,9 @@ class BoardPosition:
     def hardware_encode(self) -> bytes:
         """encodes position to bytes"""
 
-        return ((self.row << 4) | self.col).to_bytes(1, ENDIANNESS, signed=False)
+        return ((self.row << 4) | self.col).to_bytes(
+            1, ENDIANNESS, signed=False
+        )
 
     def __bytes__(self):
         return self.hardware_encode()

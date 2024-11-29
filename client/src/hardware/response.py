@@ -18,10 +18,14 @@ class HardwareResponse:
     command: HardwareCommand
 
     # pending for response
-    _on_pending: asyncio.Event = field(default_factory=asyncio.Event, init=False)
+    _on_pending: asyncio.Event = field(
+        default_factory=asyncio.Event, init=False
+    )
 
     # received command response
-    _on_recieve: asyncio.Event = field(default_factory=asyncio.Event, init=False)
+    _on_recieve: asyncio.Event = field(
+        default_factory=asyncio.Event, init=False
+    )
 
     value: HardwareCommandResponse | None = field(default=None, init=False)
 
@@ -36,7 +40,9 @@ class HardwareResponse:
         await self._on_pending.wait()
 
         try:
-            await asyncio.wait_for(self._on_recieve.wait(), int(self.command.timeout))
+            await asyncio.wait_for(
+                self._on_recieve.wait(), int(self.command.timeout)
+            )
 
             self.value = cast(HardwareCommandResponse, self.value)
         except asyncio.TimeoutError as e:

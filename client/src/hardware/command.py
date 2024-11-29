@@ -66,8 +66,12 @@ class AvailableHCommand(HardwareCommand):
     cmd: HardwareCommandId
 
     id: HardwareCommandId = field(default=HardwareCommandId.AVAILABLE)
-    priority: HardwareCommandPriority = field(default=HardwareCommandPriority.AVAILABLE)
-    timeout: HardwareCommandTimeout = field(default=HardwareCommandTimeout.AVAILABLE)
+    priority: HardwareCommandPriority = field(
+        default=HardwareCommandPriority.AVAILABLE
+    )
+    timeout: HardwareCommandTimeout = field(
+        default=HardwareCommandTimeout.AVAILABLE
+    )
 
     def serialize_args(self) -> bytes | None:
         return self.cmd.value.to_bytes(HARDWARE_COMMAND_ID_SIZE, ENDIANNESS)
@@ -83,8 +87,12 @@ class MovemenetHCommand(HardwareCommand):
     dest: BoardPosition
 
     id: HardwareCommandId = field(default=HardwareCommandId.MOVEMENT)
-    priority: HardwareCommandPriority = field(default=HardwareCommandPriority.MOVEMENT)
-    timeout: HardwareCommandTimeout = field(default=HardwareCommandTimeout.MOVEMENT)
+    priority: HardwareCommandPriority = field(
+        default=HardwareCommandPriority.MOVEMENT
+    )
+    timeout: HardwareCommandTimeout = field(
+        default=HardwareCommandTimeout.MOVEMENT
+    )
 
     def serialize_args(self) -> bytes | None:
         return self.origin.hardware_encode() + self.dest.hardware_encode()
@@ -100,7 +108,9 @@ class ClearMovementsHCommand(HardwareCommand):
     priority: HardwareCommandPriority = field(
         default=HardwareCommandPriority.CLEAR_MOVS
     )
-    timeout: HardwareCommandTimeout = field(default=HardwareCommandTimeout.CLEAR_MOVS)
+    timeout: HardwareCommandTimeout = field(
+        default=HardwareCommandTimeout.CLEAR_MOVS
+    )
 
     def serialize_args(self) -> bytes | None:
         return None
@@ -115,8 +125,12 @@ class PrintHCommand(HardwareCommand):
     content: str
 
     id: HardwareCommandId = field(default=HardwareCommandId.PRINT)
-    priority: HardwareCommandPriority = field(default=HardwareCommandPriority.PRINT)
-    timeout: HardwareCommandTimeout = field(default=HardwareCommandTimeout.PRINT)
+    priority: HardwareCommandPriority = field(
+        default=HardwareCommandPriority.PRINT
+    )
+    timeout: HardwareCommandTimeout = field(
+        default=HardwareCommandTimeout.PRINT
+    )
 
     def serialize_args(self) -> bytes | None:
         return self.content.encode(ENCODING)

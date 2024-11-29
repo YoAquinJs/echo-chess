@@ -78,7 +78,9 @@ class HardwareCommunicationHandler(ABC):
         await response.wait()
         return response.value
 
-    def _recieve_response(self, command_response: HardwareCommandResponse) -> None:
+    def _recieve_response(
+        self, command_response: HardwareCommandResponse
+    ) -> None:
         """
         receives command from hardware, and updates handler queue state
 
@@ -100,7 +102,9 @@ class HardwareCommunicationHandler(ABC):
             if command_id == HardwareCommandId.AVAILABLE:
                 continue
 
-            command_response = await self.send_command(AvailableHCommand(command_id))
+            command_response = await self.send_command(
+                AvailableHCommand(command_id)
+            )
 
             if command_response == HardwareCommandResponse.AVAILABLE:
                 self.capabilities.add(HardwareCommand.from_id(command_id))

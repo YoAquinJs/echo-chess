@@ -70,7 +70,9 @@ class HardwareCommunicationMockHandler(HardwareCommunicationHandler):
 
             self._recieve_response(response)
 
-    def send_command_mock_ok(self, command: HardwareCommand) -> HardwareCommandResponse:
+    def send_command_mock_ok(
+        self, command: HardwareCommand
+    ) -> HardwareCommandResponse:
         """sends command and always succeeds"""
 
         if isinstance(command, AvailableHCommand):
@@ -80,7 +82,9 @@ class HardwareCommunicationMockHandler(HardwareCommunicationHandler):
 
         return HardwareCommandResponse.EXECUTED
 
-    def send_command_mock_error(self, _: HardwareCommand) -> HardwareCommandResponse:
+    def send_command_mock_error(
+        self, _: HardwareCommand
+    ) -> HardwareCommandResponse:
         """sends command and always fails"""
 
         return HardwareCommandResponse.HARDWARE_ERROR
